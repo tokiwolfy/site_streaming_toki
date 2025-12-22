@@ -11,49 +11,43 @@
         <form id="adminForm">
             <div id="twitch-sec" class="admin-section">
                 <p>> TWITCH USER :</p>
-                <input type="text" id="u" class="input-retro" >
+                <input type="text" id="u" class="input-retro" placeholder="ex: mon_pseudo">
                 <p>> CLIENT ID :</p>
-                <input type="text" id="cid" class="input-retro" >
+                <input type="text" id="cid" class="input-retro">
                 <p>> ACCESS TOKEN :</p>
-                <input type="password" id="t" class="input-retro" >
+                <input type="password" id="t" class="input-retro">
             </div>
 
             <div class="admin-section">
-                <p>> BIO :</p>
+                <p>> MA BIO :</p>
                 <input type="text" id="bio" class="input-retro">
                 <p>> LIEN DISCORD :</p>
                 <input type="text" id="disc" class="input-retro">
-                <p>> JEUX DU MOMENT (séparés par une virgule) :</p>
-                <input type="text" id="games" class="input-retro" placeholder="League, Valorant, Minecraft">
+                <p>> JEUX (séparés par virgule) :</p>
+                <input type="text" id="games" class="input-retro" placeholder="Minecraft, LoL, Art">
                 <p>> URL DU FOND (GIF/IMAGE) :</p>
                 <input type="text" id="bg" class="input-retro" placeholder="Lien vers un GIF Pixel Art">
             </div>
-            
-            <button type="submit" class="btn">ENREGISTRER LES MODIFICATIONS</button>
+            <button type="submit" class="btn" style="background:#e94560 !important; color:white !important;">METTRE À JOUR LE SITE</button>
         </form>
-        
-        <button onclick="localStorage.clear(); location.reload();" style="color:red; background:none; border:none; cursor:pointer; font-family:'VT323'; text-decoration:underline; margin-top: 10px;">Réinitialiser tout le site</button>
+        <button onclick="localStorage.clear(); location.reload();" style="color:#666; background:none; border:none; cursor:pointer; font-family:'VT323'; margin-top:15px;">Réinitialiser les données</button>
     </div>
 
     <script>
         window.onload = () => {
-            // Chargement des données Twitch
-            if(localStorage.getItem('twitch_user')) {
-                document.getElementById('u').value = localStorage.getItem('twitch_user');
-                document.getElementById('cid').value = localStorage.getItem('twitch_client');
-                document.getElementById('t').value = localStorage.getItem('twitch_token');
-                document.getElementById('twitch-sec').classList.add('locked');
-            }
-            // Chargement des préférences visuelles
+            document.getElementById('u').value = localStorage.getItem('twitch_user') || "";
+            document.getElementById('cid').value = localStorage.getItem('twitch_client') || "";
+            document.getElementById('t').value = localStorage.getItem('twitch_token') || "";
             document.getElementById('bio').value = localStorage.getItem('user_bio') || "";
             document.getElementById('disc').value = localStorage.getItem('user_discord') || "";
             document.getElementById('bg').value = localStorage.getItem('user_bg') || "";
             document.getElementById('games').value = localStorage.getItem('user_games') || "";
+            
+            if(localStorage.getItem('twitch_user')) document.getElementById('twitch-sec').classList.add('locked');
         };
 
         document.getElementById('adminForm').onsubmit = (e) => {
             e.preventDefault();
-            // Sauvegarde de tout dans le LocalStorage
             localStorage.setItem('twitch_user', document.getElementById('u').value);
             localStorage.setItem('twitch_client', document.getElementById('cid').value);
             localStorage.setItem('twitch_token', document.getElementById('t').value);
@@ -61,8 +55,7 @@
             localStorage.setItem('user_discord', document.getElementById('disc').value);
             localStorage.setItem('user_bg', document.getElementById('bg').value);
             localStorage.setItem('user_games', document.getElementById('games').value);
-
-            alert("SYSTÈME MIS À JOUR !");
+            alert("CONFIGURATION ENREGISTRÉE !");
             window.location.href = "index.html";
         };
     </script>
