@@ -44,34 +44,38 @@ body {
 
 .command { margin-top: 20px; color: #008F11; }
 
+/* Style unifié pour les liens ET les boutons */
 .btn {
     display: block;
-    width: 100%; /* Pour qu'il prenne toute la largeur comme les inputs */
-    background: transparent; /* Enlève le gris par défaut */
-    color: #00FF41;
+    width: 100%;
+    background-color: transparent !important; /* Force la transparence */
+    color: #00FF41 !important;
     text-decoration: none;
-    border: 1px solid #00FF41;
+    border: 1px solid #00FF41 !important;
     padding: 12px;
     margin: 10px 0;
-    font-family: 'VT323', monospace; /* Très important pour garder le style pixel */
-    font-size: 1.2rem;
-    transition: 0.2s;
+    font-family: 'VT323', monospace !important;
+    font-size: 1.5rem !important; /* Un peu plus grand pour le style terminal */
+    transition: all 0.2s ease;
     text-align: center;
     cursor: pointer;
     text-transform: uppercase;
+    box-sizing: border-box;
+    -webkit-appearance: none; /* Supprime le style iOS/Chrome par défaut */
+    border-radius: 0; /* Pas d'arrondi pour le style CMD */
 }
 
+/* Effet au survol */
 .btn:hover {
-    background: #00FF41;
-    color: black;
-    box-shadow: 0 0 20px #00FF41;
+    background-color: #00FF41 !important;
+    color: #050505 !important; /* Le texte devient noir sur fond vert */
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
 }
 
-/* On enlève les bordures bizarres que les navigateurs mettent sur les boutons */
+/* Correction spécifique pour la balise <button> */
 button.btn {
     outline: none;
-    border-radius: 0;
-    -webkit-appearance: none;
+    line-height: 1;
 }
 
 .input-retro {
@@ -94,4 +98,5 @@ button.btn {
 .cursor {
     animation: blink 1s infinite;
 }
+
 @keyframes blink { 50% { opacity: 0; } }
