@@ -2,48 +2,41 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>SYSTEM_OS</title>
+    <title>Streamer OS</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="crt-overlay"></div>
-    <div class="terminal">
-        <header>
-            <p>> INITIALIZING... [OK]</p>
+    <div class="terminal pixel-art-border">
+        <header style="text-align: center;">
+            <img id="pfp" src="https://via.placeholder.com/100" class="avatar-pixel">
             <h1 id="title">> NOM_DU_STREAMER</h1>
-            <div id="status-live" class="status-badge offline">STATUS: OFFLINE</div>
+            <p id="bio-text">Chargement de la bio...</p>
+            <div id="status-live" class="status-badge offline">OFFLINE</div>
         </header>
 
-        <nav style="margin-top: 30px;">
-            <a href="https://twitch.tv/TON_USER" class="btn">> ACCÉDER AU LIVE</a>
-            <a href="https://discord.gg/LIEN" class="btn">> REJOINDRE LE DISCORD</a>
+        <nav style="margin-top: 20px;">
+            <a id="twitch-link" href="#" class="btn">> VOIR LE LIVE</a>
+            <a id="discord-link" href="#" class="btn">> DISCORD</a>
         </nav>
     </div>
 
     <script>
-        async function checkLive() {
-            const user = localStorage.getItem('twitch_user');
-            const cid = localStorage.getItem('twitch_client');
-            const token = localStorage.getItem('twitch_token');
-
-            if (!user || !cid || !token) return;
+        function loadData() {
+            const user = localStorage.getItem('twitch_user') || "STREAMER";
+            const avatar = localStorage.getItem('user_avatar') || "https://via.placeholder.com/100";
+            const bio = localStorage.getItem('user_bio') || "Bienvenue sur mon espace !";
+            const discord = localStorage.getItem('user_discord') || "#";
 
             document.getElementById('title').innerText = "> " + user.toUpperCase();
-
-            try {
-                const res = await fetch(`https://api.twitch.tv/helix/streams?user_login=${user}`, {
-                    headers: { 'Client-ID': cid, 'Authorization': `Bearer ${token}` }
-                });
-                const data = await res.json();
-                const badge = document.getElementById('status-live');
-                if (data.data && data.data.length > 0) {
-                    badge.innerText = "STATUS: LIVE NOW";
-                    badge.className = "status-badge online";
-                }
-            } catch (e) { console.error("API Error"); }
+            document.getElementById('pfp').src = avatar;
+            document.getElementById('bio-text').innerText = bio;
+            document.getElementById('twitch-link').href = "https://twitch.tv/" + user;
+            document.getElementById('discord-link').href = discord;
         }
-        checkLive();
-        setInterval(checkLive, 60000);
+
+        // Garder ici la fonction checkLive() précédente pour le statut Twitch...
+        loadData();
     </script>
 </body>
 </html>
