@@ -2,65 +2,57 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard - Streamer OS</title>
+    <title>Dashboard Admin</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .admin-section { background: rgba(0,0,0,0.5); padding: 15px; border: 1px solid #00FF41; margin-bottom: 20px; }
-        .locked { opacity: 0.5; pointer-events: none; border-color: #ff4141; }
-        .hint { font-size: 0.8rem; color: #888; }
-    </style>
 </head>
 <body>
-    <div class="terminal" style="max-width: 800px;">
-        <h1>[ TABLEAU DE BORD DU STREAMER ]</h1>
-        
-        <form id="mainForm">
-            <div id="twitch-section" class="admin-section">
-                <h3>1. CONFIGURATION DU NOYAU (Codes API)</h3>
-                <p class="hint">Ces codes permettent d'afficher ton statut LIVE. Une fois sauvés, ils sont verrouillés.</p>
-                <input type="text" id="u" class="input-retro" placeholder="Twitch Username" required>
-                <input type="text" id="cid" class="input-retro" placeholder="Client ID" required>
-                <input type="password" id="t" class="input-retro" placeholder="Access Token" required>
+    <div class="terminal" style="max-width: 500px; overflow-y: auto; max-height: 90vh;">
+        <h2>[ GESTION DU SYSTÈME ]</h2>
+        <form id="adminForm">
+            <div id="twitch-sec" class="admin-section">
+                <p>> TWITCH USER :</p>
+                <input type="text" id="u" class="input-retro" required>
+                <p>> CLIENT ID :</p>
+                <input type="text" id="cid" class="input-retro" required>
+                <p>> ACCESS TOKEN :</p>
+                <input type="password" id="t" class="input-retro" required>
             </div>
 
             <div class="admin-section">
-                <h3>2. PERSONNALISATION DU PROFIL</h3>
-                <p>URL DE TA PHOTO (Imgur, Discord...):</p>
-                <input type="text" id="avatar" class="input-retro" placeholder="https://...">
-                <p>TA BIO :</p>
-                <input type="text" id="bio" class="input-retro" placeholder="Ex: Variété & Chill">
-                <p>LIEN DISCORD :</p>
-                <input type="text" id="discord" class="input-retro" placeholder="Lien d'invitation">
+                <p>> BIO :</p>
+                <input type="text" id="bio" class="input-retro">
+                <p>> LIEN DISCORD :</p>
+                <input type="text" id="disc" class="input-retro">
+                <p>> URL DU FOND (GIF/IMAGE) :</p>
+                <input type="text" id="bg" class="input-retro" placeholder="Lien vers un GIF Pixel Art">
             </div>
-
-            <button type="submit" class="btn">METTRE À JOUR LE SITE</button>
+            <button type="submit" class="btn">ENREGISTRER LES MODIFICATIONS</button>
         </form>
+        <button onclick="localStorage.clear(); location.reload();" style="color:red; background:none; border:none; cursor:pointer; font-family:'VT323'; text-decoration:underline;">Réinitialiser tout le site</button>
     </div>
 
     <script>
-        // Au chargement, on remplit avec ce qui existe déjà
         window.onload = () => {
             if(localStorage.getItem('twitch_user')) {
                 document.getElementById('u').value = localStorage.getItem('twitch_user');
                 document.getElementById('cid').value = localStorage.getItem('twitch_client');
                 document.getElementById('t').value = localStorage.getItem('twitch_token');
-                // On verrouille visuellement la section Twitch
-                document.getElementById('twitch-section').classList.add('locked');
+                document.getElementById('twitch-sec').classList.add('locked');
             }
-            document.getElementById('avatar').value = localStorage.getItem('user_avatar') || "";
             document.getElementById('bio').value = localStorage.getItem('user_bio') || "";
-            document.getElementById('discord').value = localStorage.getItem('user_discord') || "";
+            document.getElementById('disc').value = localStorage.getItem('user_discord') || "";
+            document.getElementById('bg').value = localStorage.getItem('user_bg') || "";
         };
 
-        document.getElementById('mainForm').onsubmit = (e) => {
+        document.getElementById('adminForm').onsubmit = (e) => {
             e.preventDefault();
             localStorage.setItem('twitch_user', document.getElementById('u').value);
             localStorage.setItem('twitch_client', document.getElementById('cid').value);
             localStorage.setItem('twitch_token', document.getElementById('t').value);
-            localStorage.setItem('user_avatar', document.getElementById('avatar').value);
             localStorage.setItem('user_bio', document.getElementById('bio').value);
-            localStorage.setItem('user_discord', document.getElementById('user_discord').value);
-            alert("SITE MIS À JOUR !");
+            localStorage.setItem('user_discord', document.getElementById('disc').value);
+            localStorage.setItem('user_bg', document.getElementById('bg').value);
+            alert("SYSTÈME MIS À JOUR !");
             window.location.href = "index.html";
         };
     </script>
