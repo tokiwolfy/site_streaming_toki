@@ -25,49 +25,47 @@
         <main class="terminal">
             <header>
                 <img id="pfp" src="https://api.dicebear.com/7.x/pixel-art/svg?seed=Lucky" class="avatar-pixel">
-                <h1 id="title">> RECRUE_ERROR</h1>
+                <h1 id="title">> NOM_DU_STREAMER</h1>
                 <div id="status-live" class="status-badge offline">OFFLINE</div>
             </header>
             <div style="margin: 15px 0;">
-                <p id="bio-text">Système en attente de configuration...</p>
+                <p id="bio-text">Chargement du système...</p>
             </div>
             <nav>
-                <a id="twitch-link" href="#" class="btn">ACCÉDER AU LIVE</a>
-                <a id="discord-link" href="#" class="btn">REJOINDRE LE DISCORD</a>
+                <a id="twitch-link" href="#" class="btn">REJOINDRE LA MISSION (TWITCH)</a>
+                <a id="discord-link" href="#" class="btn">ACCÉDER AU HUB (DISCORD)</a>
+                <a href="admin.html" class="btn-admin">> CONFIGURATION_SYSTÈME</a>
             </nav>
         </main>
 
         <aside class="side-panel">
             <div class="panel-header">CURRENT_GAMES</div>
             <div id="games-list">
-                <div class="item">Aucun jeu listé</div>
+                <div class="item">En attente de données...</div>
             </div>
         </aside>
     </div>
 
     <script>
         async function syncData() {
-            const user = localStorage.getItem('twitch_user');
+            const user = localStorage.getItem('twitch_user') || "STREAMER";
             const cid = localStorage.getItem('twitch_client');
             const token = localStorage.getItem('twitch_token');
             const bg = localStorage.getItem('user_bg');
             const games = localStorage.getItem('user_games');
 
-            // 1. Appliquer les réglages visuels
-            if(bg) document.body.style.backgroundImage = `url('${bg}')`;
-            if(user) document.getElementById('title').innerText = "> " + user.toUpperCase();
-            document.getElementById('bio-text').innerText = localStorage.getItem('user_bio') || "Bienvenue sur mon espace.";
+            if(bg) document.getElementById('bg').style.backgroundImage = `url('${bg}')`;
+            document.getElementById('title').innerText = "> " + user.toUpperCase();
+            document.getElementById('bio-text').innerText = localStorage.getItem('user_bio') || "Bienvenue sur mon espace !";
             document.getElementById('discord-link').href = localStorage.getItem('user_discord') || "#";
-            document.getElementById('twitch-link').href = "https://twitch.tv/" + (user || "");
+            document.getElementById('twitch-link').href = "https://twitch.tv/" + user;
 
-            // 2. Gérer la liste des jeux
             if(games) {
                 const gamesDiv = document.getElementById('games-list');
                 gamesDiv.innerHTML = games.split(',').map(g => `<div class="item">${g.trim()}</div>`).join('');
             }
 
-            // 3. Appel API Twitch (si configuré)
-            if (user && cid && token) {
+            if (user !== "STREAMER" && cid && token) {
                 try {
                     const uRes = await fetch(`https://api.twitch.tv/helix/users?login=${user}`, {
                         headers: { 'Client-ID': cid, 'Authorization': `Bearer ${token}` }
@@ -83,11 +81,8 @@
                     if(sData.data.length > 0) {
                         badge.innerText = "STATUS: LIVE NOW";
                         badge.className = "status-badge online";
-                    } else {
-                        badge.innerText = "OFFLINE";
-                        badge.className = "status-badge offline";
                     }
-                } catch(e) { console.log("Twitch API Offline"); }
+                } catch(e) { console.log("API Error"); }
             }
         }
         syncData();
