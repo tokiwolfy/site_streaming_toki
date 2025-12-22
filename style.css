@@ -11,7 +11,6 @@ body {
     color: #e94560;
 }
 
-/* Fond GIF avec réglage de luminosité pour la lisibilité */
 .bg-gif {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -41,7 +40,6 @@ body {
     z-index: 5;
 }
 
-/* Style commun des cadres */
 .terminal, .side-panel {
     background: rgba(15, 12, 41, 0.92);
     border: 3px solid #e94560;
@@ -66,6 +64,7 @@ body {
     padding: 10px;
     border-left: 4px solid #e94560;
     font-size: 1.1rem;
+    text-align: left;
 }
 
 .avatar-pixel {
@@ -104,7 +103,16 @@ body {
 }
 .btn:hover { background: #e94560 !important; color: white !important; box-shadow: 0 0 15px #e94560; }
 
-/* Styles spécifiques à la page Admin */
+.btn-admin {
+    display: inline-block;
+    margin-top: 20px;
+    color: rgba(233, 69, 96, 0.4);
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: 0.3s;
+}
+.btn-admin:hover { color: #e94560; text-shadow: 0 0 5px #e94560; }
+
 .input-retro {
     background: #0f3460;
     border: 2px solid #e94560;
@@ -116,9 +124,7 @@ body {
     box-sizing: border-box;
 }
 .admin-section { background: rgba(0,0,0,0.3); padding: 15px; margin-bottom: 15px; }
-.locked { opacity: 0.5; pointer-events: none; border-color: #555; }
 
-/* Mobile Responsive */
 @media (max-width: 900px) {
     .main-layout { flex-direction: column; align-items: center; }
     .side-panel, .terminal { width: 100%; }
