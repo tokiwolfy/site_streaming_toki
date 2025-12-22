@@ -1,18 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 body {
-    background-color: #050505;
-    color: #00FF41; /* Vert Matrix */
+    background-color: #1a1a2e; /* Bleu nuit plus doux */
+    background-image: radial-gradient(#16213e 0.5px, transparent 0.5px);
+    background-size: 20px 20px;
+    color: #e94560; /* Rose/Rouge pixel art */
     font-family: 'VT323', monospace;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
-/* Effet Scanline (lignes horizontales) */
+/* Effet Scanline (lignes horizontales CRT) */
 .crt-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -24,79 +26,94 @@ body {
 }
 
 .terminal {
+    background: rgba(22, 33, 62, 0.95);
+    border: 4px solid #e94560;
+    box-shadow: 10px 10px 0px #0f3460; /* Ombre pixelisée */
     width: 90%;
-    max-width: 600px;
-    padding: 20px;
-    border: 2px solid #00FF41;
-    box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+    max-width: 500px;
+    padding: 30px;
     position: relative;
+    text-align: center;
+    z-index: 5;
+}
+
+.avatar-pixel {
+    width: 120px;
+    height: 120px;
+    border: 4px solid #e94560;
+    image-rendering: pixelated; 
+    margin-bottom: 15px;
+    background: #16213e;
+    object-fit: cover;
 }
 
 .status-badge {
     display: inline-block;
-    padding: 5px 10px;
+    padding: 5px 15px;
     margin: 10px 0;
     font-weight: bold;
+    font-size: 1.2rem;
 }
 
-.online { background: #00FF41; color: black; box-shadow: 0 0 10px #00FF41; }
-.offline { background: #333; color: #888; }
+.online { background: #00FF41; color: black; box-shadow: 0 0 15px #00FF41; }
+.offline { background: #333; color: #888; border: 1px solid #444; }
 
-.command { margin-top: 20px; color: #008F11; }
-
-/* Style unifié pour les liens ET les boutons */
+/* Style des boutons */
 .btn {
     display: block;
     width: 100%;
-    background-color: transparent !important; /* Force la transparence */
-    color: #00FF41 !important;
-    text-decoration: none;
-    border: 1px solid #00FF41 !important;
+    background: transparent;
+    color: #e94560 !important;
+    border: 2px solid #e94560 !important;
     padding: 12px;
-    margin: 10px 0;
-    font-family: 'VT323', monospace !important;
-    font-size: 1.5rem !important; /* Un peu plus grand pour le style terminal */
-    transition: all 0.2s ease;
-    text-align: center;
+    margin: 15px 0;
+    font-family: 'VT323', monospace;
+    font-size: 1.4rem;
+    text-decoration: none;
+    transition: 0.2s;
     cursor: pointer;
-    text-transform: uppercase;
     box-sizing: border-box;
-    -webkit-appearance: none; /* Supprime le style iOS/Chrome par défaut */
-    border-radius: 0; /* Pas d'arrondi pour le style CMD */
+    text-transform: uppercase;
 }
 
-/* Effet au survol */
 .btn:hover {
-    background-color: #00FF41 !important;
-    color: #050505 !important; /* Le texte devient noir sur fond vert */
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
+    background-color: #e94560 !important;
+    color: #fff !important;
+    box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
 }
 
-/* Correction spécifique pour la balise <button> */
-button.btn {
-    outline: none;
-    line-height: 1;
-}
-
+/* Champs de saisie pour l'admin */
 .input-retro {
-    background: black;
-    border: 1px solid #00FF41;
-    color: #00FF41;
-    padding: 10px;
+    background: #0f3460;
+    border: 2px solid #e94560;
+    color: #fff;
+    padding: 12px;
     width: 100%;
     font-family: 'VT323', monospace;
     font-size: 1.2rem;
     outline: none;
     box-sizing: border-box;
+    margin-bottom: 15px;
 }
 
 .input-retro:focus {
-    box-shadow: 0 0 10px #00FF41;
+    box-shadow: 0 0 10px #e94560;
 }
 
-/* Animation du curseur qui clignote */
-.cursor {
-    animation: blink 1s infinite;
+/* Sections Admin */
+.admin-section {
+    background: rgba(0,0,0,0.3);
+    padding: 20px;
+    border: 1px dashed #e94560;
+    margin-bottom: 20px;
+    text-align: left;
 }
 
+.locked {
+    border-color: #555;
+    opacity: 0.7;
+    background: #222;
+}
+
+.cursor { animation: blink 1s infinite; }
 @keyframes blink { 50% { opacity: 0; } }
