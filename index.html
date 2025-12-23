@@ -7,27 +7,25 @@
 </head>
 <body>
     <div id="bg" class="bg-gif"></div>
-    <div id="news-bar" class="news-ticker">--- CHARGEMENT DES NEWS ---</div>
-    
+    <div id="news-bar" class="news-ticker">CHARGEMENT...</div>
     <div class="crt-overlay"></div>
 
     <div class="main-layout">
         <aside class="side-panel">
             <div class="panel-header">SCHEDULE_LOG</div>
-            <div id="schedule-list">
-                </div>
+            <div id="schedule-list"></div>
         </aside>
 
         <main class="terminal">
             <header>
                 <img id="pfp" src="https://api.dicebear.com/7.x/pixel-art/svg?seed=Lucky" class="avatar-pixel">
-                <h1 id="title">> NOM_DU_STREAMER</h1>
+                <h1 id="title">> SYSTEM_READY</h1>
                 <div id="status-live" class="status-badge offline">OFFLINE</div>
             </header>
             <div style="margin: 15px 0;"><p id="bio-text"></p></div>
             <nav>
-                <a id="twitch-link" href="#" class="btn">ACCÉDER AU LIVE</a>
-                <a id="discord-link" href="#" class="btn">REJOINDRE LE DISCORD</a>
+                <a id="twitch-link" href="#" class="btn-green">ACCÉDER AU LIVE</a>
+                <a id="discord-link" href="#" class="btn-green">REJOINDRE LE DISCORD</a>
                 <a href="admin.html" class="btn-admin">> CONFIGURATION_SYSTÈME</a>
             </nav>
         </main>
@@ -42,7 +40,7 @@
         async function syncData() {
             const get = (key) => localStorage.getItem('user_' + key);
             
-            // News
+            // News Bar
             const news = get('news');
             const bar = document.getElementById('news-bar');
             if(news) { bar.innerText = " +++ " + news.toUpperCase() + " +++ "; bar.style.display = "block"; }
@@ -53,21 +51,36 @@
             document.getElementById('title').innerText = "> " + (get('u') || "STREAMER").toUpperCase();
             document.getElementById('bio-text').innerText = get('bio') || "Bienvenue !";
 
-            // Planning Dynamique
+            // Planning
             const days = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
-            const schedList = document.getElementById('schedule-list');
-            schedList.innerHTML = days.map((d, i) => {
+            document.getElementById('schedule-list').innerHTML = days.map((d, i) => {
                 const h = get('p' + (i+1)) || "--";
                 return `<div class="item"><strong>${d} :</strong> ${h}</div>`;
             }).join('');
 
             // Jeux
             const games = get('games');
-            if(games) document.getElementById('games-list').innerHTML = games.split(',').map(g => `<div class="item">${g.trim()}</div>`).join('');
+            document.getElementById('games-list').innerHTML = games ? games.split(',').map(g => `<div class="item">${g.trim()}</div>`).join('') : '<div class="item">Aucun jeu</div>';
 
-            // ... (Ici ton code Fetch Twitch pour PFP et Live Status)
+            // API Twitch
+            const u = get('u'), cid = get('cid'), t = get('t');
+            if (u && cid && t) {
+                try {
+                    const headers = { 'Client-ID': cid, 'Authorization': `Bearer ${t}` };
+                    const uRes = await fetch(`https://api.twitch.tv/helix/users?login=${u}`, { headers });
+                    const uData = await uRes.json();
+                    if(uData.data[0]) document.getElementById('pfp').src = uData.data[0].profile_image_url;
+
+                    const sRes = await fetch(`https://api.twitch.tv/helix/streams?user_login=${u}`, { headers });
+                    const sData = await sRes.json();
+                    const badge = document.getElementById('status-live');
+                    badge.innerText = sData.data.length > 0 ? "STATUS: LIVE" : "OFFLINE";
+                    badge.className = sData.data.length > 0 ? "status-badge online" : "status-badge offline";
+                } catch(e) { console.log("Twitch API Error"); }
+            }
         }
         syncData();
+        setInterval(syncData, 60000);
     </script>
 </body>
 </html>
