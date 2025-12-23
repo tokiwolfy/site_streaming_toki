@@ -10,6 +10,7 @@ body {
     background-color: #0d0221;
 }
 
+/* Fond GIF : caché sur mobile pour la performance */
 .bg-gif {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -57,7 +58,7 @@ body {
 .side-panel .panel-header { border-bottom: 2px solid #e94560; margin-bottom: 15px; font-size: 1.5rem; text-align: center; }
 .side-panel .item { background: rgba(233, 69, 96, 0.1); margin: 8px 0; padding: 10px; border-left: 4px solid #e94560; }
 
-/* --- SECTION VERTE (Milieu) --- */
+/* --- SECTION VERTE (Milieu - Espacement Corrigé) --- */
 .terminal {
     background: rgba(15, 12, 41, 0.95);
     border: 3px solid #00FF41;
