@@ -2,39 +2,35 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Admin - Streamer OS</title>
+    <title>Admin - Streamer OS</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .preview-box {
-            border: 2px dashed #e94560;
-            padding: 10px;
-            margin-top: 20px;
-            transform: scale(0.8); /* Pour que l'aperçu soit plus petit */
-            background: rgba(0,0,0,0.5);
+            border: 2px solid #00FF41; 
+            padding: 15px; margin-top: 20px;
+            background: rgba(15, 12, 41, 0.95); color: #00FF41;
+            text-align: center;
         }
+        .prev-btn { border: 1px solid #00FF41; padding: 5px; margin: 5px 0; font-size: 0.8rem; opacity: 0.7; }
     </style>
 </head>
 <body>
-    <div class="terminal" style="max-width: 600px; overflow-y: auto; max-height: 95vh;">
+    <div class="terminal" style="max-width: 600px; overflow-y: auto; max-height: 95vh; border-color: #e94560; color: #e94560;">
         <h2>[ CONFIGURATION SYSTÈME ]</h2>
-        
         <form id="adminForm">
             <div class="admin-section">
-                <p>> TWITCH USER / CLIENT ID / TOKEN :</p>
+                <p>> TWITCH CONFIG (USER / CID / TOKEN) :</p>
                 <input type="text" id="u" class="input-retro" placeholder="Pseudo">
                 <input type="text" id="cid" class="input-retro" placeholder="Client ID">
                 <input type="password" id="t" class="input-retro" placeholder="Token">
             </div>
-
             <div class="admin-section">
-                <p>> BARRE DE NOTIFICATION (NEWS) :</p>
-                <input type="text" id="news" class="input-retro" placeholder="Ex: Live annulé ce soir !">
-                <p>> BIO :</p>
-                <input type="text" id="bio" class="input-retro">
+                <p>> NEWS & BIO :</p>
+                <input type="text" id="news" class="input-retro" placeholder="News (Barre rouge)">
+                <input type="text" id="bio" class="input-retro" placeholder="Ma bio...">
             </div>
-
             <div class="admin-section">
-                <p>> PLANNING (LUN, MAR, MER, JEU, VEN, SAM, DIM) :</p>
+                <p>> PLANNING :</p>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
                     <input type="text" id="p1" class="input-retro" placeholder="LUN">
                     <input type="text" id="p2" class="input-retro" placeholder="MAR">
@@ -45,49 +41,39 @@
                     <input type="text" id="p7" class="input-retro" placeholder="DIM">
                 </div>
             </div>
-
             <div class="admin-section">
-                <p>> JEUX (virgules) & FOND (URL) :</p>
-                <input type="text" id="games" class="input-retro" placeholder="Jeux...">
-                <input type="text" id="bg" class="input-retro" placeholder="Lien GIF/Image">
+                <p>> JEUX & FOND (URL) :</p>
+                <input type="text" id="games" class="input-retro" placeholder="Jeu 1, Jeu 2...">
+                <input type="text" id="bg" class="input-retro" placeholder="URL du GIF de fond">
             </div>
-
-            <button type="submit" class="btn" style="background:#e94560 !important; color:white !important;">SAUVEGARDER LES MODIFICATIONS</button>
+            <button type="submit" class="btn-green" style="width:100%">SAUVEGARDER LES MODIFICATIONS</button>
         </form>
 
-        <p style="margin-top:30px; color:#aaa;">--- APERÇU EN DIRECT ---</p>
-        <div id="live-preview" class="preview-box">
-            <div id="prev-news" style="background:#e94560; color:white; font-size:0.8rem; padding:2px;"></div>
+        <p style="margin-top:20px; color:#666;">--- APERÇU DU CADRE VERT ---</p>
+        <div class="preview-box">
             <h3 id="prev-title">> NOM</h3>
             <p id="prev-bio" style="font-size:0.9rem;"></p>
+            <div class="prev-btn">BOUTON_ACCÈS_LIVE</div>
         </div>
     </div>
 
     <script>
         const fields = ['u', 'news', 'bio', 'bg', 'games', 'cid', 't', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7'];
-
         window.onload = () => {
             fields.forEach(f => {
-                const val = localStorage.getItem('user_' + f) || "";
-                document.getElementById(f).value = val;
-                // Ecouteur pour la prévisualisation
+                document.getElementById(f).value = localStorage.getItem('user_' + f) || "";
                 document.getElementById(f).addEventListener('input', updatePreview);
             });
             updatePreview();
         };
-
         function updatePreview() {
-            document.getElementById('prev-title').innerText = "> " + (document.getElementById('u').value || "NOM");
-            document.getElementById('prev-bio').innerText = document.getElementById('bio').value || "Ma bio...";
-            document.getElementById('prev-news').innerText = document.getElementById('news').value || "Pas de news.";
+            document.getElementById('prev-title').innerText = "> " + (document.getElementById('u').value || "STREAMER");
+            document.getElementById('prev-bio').innerText = document.getElementById('bio').value || "Ma bio apparaîtra ici...";
         }
-
         document.getElementById('adminForm').onsubmit = (e) => {
             e.preventDefault();
-            fields.forEach(f => {
-                localStorage.setItem('user_' + f, document.getElementById(f).value);
-            });
-            alert("SYSTÈME MIS À JOUR !");
+            fields.forEach(f => localStorage.setItem('user_' + f, document.getElementById(f).value));
+            alert("MIS À JOUR !");
             window.location.href = "index.html";
         };
     </script>
