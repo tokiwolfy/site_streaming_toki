@@ -1,69 +1,92 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Streamer OS</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .preview-box {
+            border: 2px solid #00FF41; 
+            padding: 15px; margin-top: 20px;
+            background: rgba(15, 12, 41, 0.95); color: #00FF41;
+            text-align: center;
+        }
+        .prev-btn { border: 1px solid #00FF41; padding: 5px; margin: 5px 0; font-size: 0.8rem; opacity: 0.7; }
+    </style>
+</head>
+<body>
+    <div class="terminal" style="max-width: 600px; overflow-y: auto; max-height: 95vh; border-color: #e94560; color: #e94560;">
+        <h2>[ CONFIGURATION SYSTÈME ]</h2>
+        <form id="adminForm">
+            <div class="admin-section">
+                <p>> TWITCH CONFIG (USER / CID / TOKEN) :</p>
+                <input type="text" id="u" class="input-retro" placeholder="Pseudo">
+                <input type="text" id="cid" class="input-retro" placeholder="Client ID">
+                <input type="password" id="t" class="input-retro" placeholder="Token">
+            </div>
+            <div class="admin-section">
+                <p>> NEWS & BIO :</p>
+                <input type="text" id="news" class="input-retro" placeholder="News (Barre rouge)">
+                <input type="text" id="bio" class="input-retro" placeholder="Ma bio...">
+            </div>
+            <div class="admin-section">
+                <p>> PLANNING :</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                    <input type="text" id="p1" class="input-retro" placeholder="LUN">
+                    <input type="text" id="p2" class="input-retro" placeholder="MAR">
+                    <input type="text" id="p3" class="input-retro" placeholder="MER">
+                    <input type="text" id="p4" class="input-retro" placeholder="JEU">
+                    <input type="text" id="p5" class="input-retro" placeholder="VEN">
+                    <input type="text" id="p6" class="input-retro" placeholder="SAM">
+                    <input type="text" id="p7" class="input-retro" placeholder="DIM">
+                </div>
+            </div>
+            <div class="admin-section">
+                <p>> JEUX & FOND (URL) :</p>
+                <input type="text" id="games" class="input-retro" placeholder="Jeu 1, Jeu 2...">
+                <input type="text" id="bg" class="input-retro" placeholder="URL du GIF de fond">
+            </div>
+            <button type="submit" class="btn-green" style="width:100%">SAUVEGARDER LES MODIFICATIONS</button>
+        </form>
 
-body {
-    margin: 0; min-height: 100vh;
-    display: flex; justify-content: center; align-items: center;
-    font-family: 'VT323', monospace;
-    background-color: #050505; /* Noir profond */
-    overflow-x: hidden;
-}
+        <p style="margin-top:20px; color:#666;">--- APERÇU DU CADRE VERT ---</p>
+        <div class="preview-box">
+            <h3 id="prev-title">> NOM</h3>
+            <p id="prev-bio" style="font-size:0.9rem;"></p>
+            <div class="prev-btn">BOUTON_ACCÈS_LIVE</div>
+        </div>
 
-/* Effet de grille au sol en perspective */
-.bg-gif::after {
-    content: "";
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background-image: 
-        linear-gradient(0deg, transparent 24%, rgba(0, 255, 65, 0.05) 25%, rgba(0, 255, 65, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, 0.05) 75%, rgba(0, 255, 65, 0.05) 76%, transparent 77%, transparent),
-        linear-gradient(90deg, transparent 24%, rgba(0, 255, 65, 0.05) 25%, rgba(0, 255, 65, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, 0.05) 75%, rgba(0, 255, 65, 0.05) 76%, transparent 77%, transparent);
-    background-size: 50px 50px;
-    z-index: -1;
-    transform: perspective(500px) rotateX(60deg);
-    transform-origin: center bottom;
-}
+        <button onclick="resetSystem()" class="btn-reset">RÉINITIALISER TOUTES LES DONNÉES</button>
+    </div>
 
-.main-layout {
-    display: flex; gap: 30px; width: 95%; max-width: 1200px;
-    align-items: stretch; z-index: 5;
-}
-
-/* --- STYLE "GLASSMORPHISM" NÉON --- */
-.terminal, .side-panel {
-    background: rgba(10, 10, 10, 0.85);
-    backdrop-filter: blur(10px); /* Effet de vitre floue */
-    border-radius: 5px;
-}
-
-/* Cadre Milieu (Vert Néon) */
-.terminal {
-    border: 2px solid #00FF41;
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4), inset 0 0 10px rgba(0, 255, 65, 0.2);
-    padding: 40px; color: #00FF41; flex: 2; text-align: center;
-}
-
-/* Cadres Côtés (Rouge/Violet Néon) */
-.side-panel {
-    border: 2px solid #ff0055;
-    box-shadow: 0 0 20px rgba(255, 0, 85, 0.3);
-    padding: 20px; color: #ff0055; flex: 1;
-}
-
-.item {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 0, 85, 0.3);
-    margin: 10px 0; padding: 12px;
-}
-
-.btn-green {
-    background: rgba(0, 255, 65, 0.1);
-    color: #00FF41 !important; border: 1px solid #00FF41 !important;
-    padding: 15px; text-transform: uppercase; letter-spacing: 2px;
-    transition: 0.3s; cursor: pointer; text-align: center; font-size: 1.3rem;
-}
-.btn-green:hover { background: #00FF41 !important; color: #000 !important; transform: translateY(-3px); }
-
-/* --- BARRE DE NEWS ANIMÉE --- */
-.news-ticker {
-    position: fixed; top: 0; left: 0; width: 100%;
-    background: #ff0055; color: white; padding: 8px;
-    box-shadow: 0 0 20px #ff0055; font-size: 1.1rem;
-}
+    <script>
+        const fields = ['u', 'news', 'bio', 'bg', 'games', 'cid', 't', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7'];
+        window.onload = () => {
+            fields.forEach(f => {
+                document.getElementById(f).value = localStorage.getItem('user_' + f) || "";
+                document.getElementById(f).addEventListener('input', updatePreview);
+            });
+            updatePreview();
+        };
+        function updatePreview() {
+            document.getElementById('prev-title').innerText = "> " + (document.getElementById('u').value || "STREAMER");
+            document.getElementById('prev-bio').innerText = document.getElementById('bio').value || "Ma bio apparaîtra ici...";
+        }
+        document.getElementById('adminForm').onsubmit = (e) => {
+            e.preventDefault();
+            fields.forEach(f => localStorage.setItem('user_' + f, document.getElementById(f).value));
+            alert("MIS À JOUR !");
+            window.location.href = "index.html";
+        };
+        function resetSystem() {
+            if(confirm("Attention : Cela va effacer toute la configuration locale. Continuer ?")) {
+                Object.keys(localStorage).forEach(key => {
+                    if(key.startsWith('user_')) localStorage.removeItem(key);
+                });
+                alert("Système réinitialisé !");
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
