@@ -40,24 +40,35 @@
         async function syncData() {
             const get = (key) => localStorage.getItem('user_' + key);
             
+            // News Bar
             const news = get('news');
             const bar = document.getElementById('news-bar');
-            if(news) { bar.innerText = " +++ " + news.toUpperCase() + " +++ "; bar.style.display = "block"; }
-            else { bar.style.display = "none"; }
+            if(news) { 
+                bar.innerText = " +++ " + news.toUpperCase() + " +++ "; 
+                bar.style.display = "block"; 
+            } else { 
+                bar.style.display = "none"; 
+            }
 
+            // Fond & Identité
             if(get('bg')) document.getElementById('bg').style.backgroundImage = `url('${get('bg')}')`;
             document.getElementById('title').innerText = "> " + (get('u') || "STREAMER").toUpperCase();
             document.getElementById('bio-text').innerText = get('bio') || "Bienvenue !";
 
+            // Planning
             const days = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
             document.getElementById('schedule-list').innerHTML = days.map((d, i) => {
                 const h = get('p' + (i+1)) || "--";
                 return `<div class="item"><strong>${d} :</strong> ${h}</div>`;
             }).join('');
 
+            // Jeux
             const games = get('games');
-            document.getElementById('games-list').innerHTML = games ? games.split(',').map(g => `<div class="item">${g.trim()}</div>`).join('') : '<div class="item">Aucun jeu</div>';
+            document.getElementById('games-list').innerHTML = games ? 
+                games.split(',').map(g => `<div class="item">${g.trim()}</div>`).join('') : 
+                '<div class="item">Aucun jeu</div>';
 
+            // API Twitch
             const u = get('u'), cid = get('cid'), t = get('t');
             if (u && cid && t) {
                 try {
