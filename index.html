@@ -2,45 +2,91 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>CyberStream - Interface</title>
+    <title>Streamer OS - Live</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="bg" class="bg-gif"></div>
-    <div id="news-bar" class="news-ticker">>> SYSTEM ALERT: INCOMING TRANSMISSION <<</div>
+    <div id="news-bar" class="news-ticker">CHARGEMENT...</div>
     <div class="crt-overlay"></div>
 
     <div class="main-layout">
         <aside class="side-panel">
-            <div class="panel-header" style="text-decoration: underline;">//_SCHEDULE_LOGS</div>
+            <div class="panel-header">PLANNING_PROG</div>
             <div id="schedule-list"></div>
         </aside>
 
         <main class="terminal">
             <header>
                 <img id="pfp" src="https://api.dicebear.com/7.x/pixel-art/svg?seed=Lucky" class="avatar-pixel">
-                <h1 id="title" style="font-size: 2.5rem; letter-spacing: 5px;">> ACCESS_GRANTED</h1>
-                <div id="status-live" class="status-badge offline">OFFLINE_MODE</div>
+                <h1 id="title">> SYSTEM_READY</h1>
+                <div id="status-live" class="status-badge offline">OFFLINE</div>
             </header>
-            <div style="margin: 25px 0; border-top: 1px dashed #00FF41; border-bottom: 1px dashed #00FF41; padding: 15px 0;">
-                <p id="bio-text" style="font-size: 1.2rem;"></p>
-            </div>
+            <div style="margin: 15px 0;"><p id="bio-text"></p></div>
             <nav>
-                <a id="twitch-link" href="#" class="btn-green">ESTABLISH_TWITCH_LINK</a>
-                <a id="discord-link" href="#" class="btn-green">JOIN_NEURAL_NETWORK</a>
-                <a href="admin.html" class="btn-admin" style="display:block; margin-top:20px; text-decoration:none; color:rgba(0,255,65,0.4); font-size:0.8rem;">[ROOT_ACCESS]</a>
+                <a id="twitch-link" href="#" class="btn-green">ACCÉDER AU LIVE</a>
+                <a id="discord-link" href="#" class="btn-green">REJOINDRE LE DISCORD</a>
+                <a href="admin.html" class="btn-admin">> CONFIGURATION_SYSTÈME</a>
             </nav>
         </main>
 
         <aside class="side-panel">
-            <div class="panel-header" style="text-decoration: underline;">//_TARGET_GAMES</div>
+            <div class="panel-header">MAIN_JEUX</div>
             <div id="games-list"></div>
         </aside>
     </div>
 
     <script>
-        // Utilise exactement le même script syncData() que tu as déjà, 
-        // il est parfaitement compatible avec ces IDs !
+        async function syncData() {
+            const get = (key) => localStorage.getItem('user_' + key);
+            
+            // News Bar
+            const news = get('news');
+            const bar = document.getElementById('news-bar');
+            if(news) { 
+                bar.innerText = " +++ " + news.toUpperCase() + " +++ "; 
+                bar.style.display = "block"; 
+            } else { 
+                bar.style.display = "none"; 
+            }
+
+            // Fond & Identité
+            if(get('bg')) document.getElementById('bg').style.backgroundImage = `url('${get('bg')}')`;
+            document.getElementById('title').innerText = "> " + (get('u') || "STREAMER").toUpperCase();
+            document.getElementById('bio-text').innerText = get('bio') || "Bienvenue !";
+
+            // Planning
+            const days = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
+            document.getElementById('schedule-list').innerHTML = days.map((d, i) => {
+                const h = get('p' + (i+1)) || "--";
+                return `<div class="item"><strong>${d} :</strong> ${h}</div>`;
+            }).join('');
+
+            // Jeux
+            const games = get('games');
+            document.getElementById('games-list').innerHTML = games ? 
+                games.split(',').map(g => `<div class="item">${g.trim()}</div>`).join('') : 
+                '<div class="item">Aucun jeu</div>';
+
+            // API Twitch
+            const u = get('u'), cid = get('cid'), t = get('t');
+            if (u && cid && t) {
+                try {
+                    const headers = { 'Client-ID': cid, 'Authorization': `Bearer ${t}` };
+                    const uRes = await fetch(`https://api.twitch.tv/helix/users?login=${u}`, { headers });
+                    const uData = await uRes.json();
+                    if(uData.data[0]) document.getElementById('pfp').src = uData.data[0].profile_image_url;
+
+                    const sRes = await fetch(`https://api.twitch.tv/helix/streams?user_login=${u}`, { headers });
+                    const sData = await sRes.json();
+                    const badge = document.getElementById('status-live');
+                    badge.innerText = sData.data.length > 0 ? "STATUS: LIVE" : "OFFLINE";
+                    badge.className = sData.data.length > 0 ? "status-badge online" : "status-badge offline";
+                } catch(e) { console.log("Twitch API Error"); }
+            }
+        }
+        syncData();
+        setInterval(syncData, 60000);
     </script>
 </body>
 </html>
