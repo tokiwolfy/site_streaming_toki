@@ -10,7 +10,6 @@ body {
     background-color: #0d0221;
 }
 
-/* Fond GIF : caché sur mobile pour la performance */
 .bg-gif {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -63,7 +62,7 @@ body {
     background: rgba(15, 12, 41, 0.95);
     border: 3px solid #00FF41;
     box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
-    padding: 25px;
+    padding: 30px 40px; /* Padding augmenté pour ne pas coller aux bordures */
     color: #00FF41;
     flex: 2;
     text-align: center;
@@ -72,10 +71,20 @@ body {
 
 /* Boutons verts pour le milieu */
 .btn-green {
-    display: block; width: 100%; background: transparent;
-    color: #00FF41 !important; border: 2px solid #00FF41 !important;
-    padding: 12px; margin: 10px 0; font-family: 'VT323';
-    text-decoration: none; transition: 0.2s; cursor: pointer; text-align: center; font-size: 1.3rem;
+    display: block; 
+    width: 100%; 
+    background: transparent;
+    color: #00FF41 !important; 
+    border: 2px solid #00FF41 !important;
+    padding: 12px; 
+    margin: 10px 0; 
+    font-family: 'VT323';
+    text-decoration: none; 
+    transition: 0.2s; 
+    cursor: pointer; 
+    text-align: center; 
+    font-size: 1.3rem;
+    box-sizing: border-box; /* Empêche le bouton de déborder du cadre */
 }
 .btn-green:hover { background: #00FF41 !important; color: #000 !important; box-shadow: 0 0 15px #00FF41; }
 
@@ -93,7 +102,13 @@ body {
 .input-retro { background: #0f3460; border: 2px solid #e94560; color: #fff; padding: 10px; width: 100%; font-family: 'VT323'; margin-bottom: 10px; box-sizing: border-box; }
 .admin-section { background: rgba(0,0,0,0.3); padding: 15px; margin-bottom: 15px; border-left: 3px solid #e94560; }
 
+.btn-reset {
+    color: #666; background: none; border: 1px solid #333; cursor: pointer; 
+    font-family: 'VT323'; margin-top: 15px; padding: 5px 10px; transition: 0.3s;
+}
+.btn-reset:hover { color: #e94560; border-color: #e94560; }
+
 @media (max-width: 900px) {
     .main-layout { flex-direction: column; align-items: center; }
-    .side-panel, .terminal { width: 100%; }
+    .side-panel, .terminal { width: 100%; padding: 20px; }
 }
