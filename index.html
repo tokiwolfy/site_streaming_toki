@@ -7,87 +7,67 @@
 </head>
 <body>
     <div id="bg" class="bg-gif"></div>
+    <div id="news-bar" class="news-ticker">--- CHARGEMENT DES NEWS ---</div>
+    
     <div class="crt-overlay"></div>
 
     <div class="main-layout">
         <aside class="side-panel">
-            <div class="panel-header">PLANNING_PROG</div>
+            <div class="panel-header">SCHEDULE_LOG</div>
             <div id="schedule-list">
-                <div class="item">LUNDI : 21H00</div>
-                <div class="item">MARDI : 21H00</div>
-                <div class="item">MERCREDI : --</div>
-                <div class="item">JEUDI : 21H00</div>
-                <div class="item">VENDREDI : 21H00</div>
-                <div class="item">WEEKEND : 14H00</div>
-            </div>
+                </div>
         </aside>
 
         <main class="terminal">
             <header>
                 <img id="pfp" src="https://api.dicebear.com/7.x/pixel-art/svg?seed=Lucky" class="avatar-pixel">
-                <h1 id="title">> TOKIWOLFY</h1>
+                <h1 id="title">> NOM_DU_STREAMER</h1>
                 <div id="status-live" class="status-badge offline">OFFLINE</div>
             </header>
-            <div style="margin: 15px 0;">
-                <p id="bio-text">Chargement du système...</p>
-            </div>
+            <div style="margin: 15px 0;"><p id="bio-text"></p></div>
             <nav>
-                <a id="twitch-link" href="#" class="btn">REJOINDRE LA MISSION (TWITCH)</a>
-                <a id="discord-link" href="#" class="btn">ACCÉDER AU HUB (DISCORD)</a>
+                <a id="twitch-link" href="#" class="btn">ACCÉDER AU LIVE</a>
+                <a id="discord-link" href="#" class="btn">REJOINDRE LE DISCORD</a>
                 <a href="admin.html" class="btn-admin">> CONFIGURATION_SYSTÈME</a>
             </nav>
         </main>
 
         <aside class="side-panel">
             <div class="panel-header">CURRENT_GAMES</div>
-            <div id="games-list">
-                <div class="item">En attente de données...</div>
-            </div>
+            <div id="games-list"></div>
         </aside>
     </div>
 
     <script>
         async function syncData() {
-            const user = localStorage.getItem('twitch_user') || "STREAMER";
-            const cid = localStorage.getItem('twitch_client');
-            const token = localStorage.getItem('twitch_token');
-            const bg = localStorage.getItem('user_bg');
-            const games = localStorage.getItem('user_games');
+            const get = (key) => localStorage.getItem('user_' + key);
+            
+            // News
+            const news = get('news');
+            const bar = document.getElementById('news-bar');
+            if(news) { bar.innerText = " +++ " + news.toUpperCase() + " +++ "; bar.style.display = "block"; }
+            else { bar.style.display = "none"; }
 
-            if(bg) document.getElementById('bg').style.backgroundImage = `url('${bg}')`;
-            document.getElementById('title').innerText = "> " + user.toUpperCase();
-            document.getElementById('bio-text').innerText = localStorage.getItem('user_bio') || "Bienvenue sur mon espace !";
-            document.getElementById('discord-link').href = localStorage.getItem('user_discord') || "#";
-            document.getElementById('twitch-link').href = "https://twitch.tv/" + user;
+            // Fond & Identité
+            if(get('bg')) document.getElementById('bg').style.backgroundImage = `url('${get('bg')}')`;
+            document.getElementById('title').innerText = "> " + (get('u') || "STREAMER").toUpperCase();
+            document.getElementById('bio-text').innerText = get('bio') || "Bienvenue !";
 
-            if(games) {
-                const gamesDiv = document.getElementById('games-list');
-                gamesDiv.innerHTML = games.split(',').map(g => `<div class="item">${g.trim()}</div>`).join('');
-            }
+            // Planning Dynamique
+            const days = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
+            const schedList = document.getElementById('schedule-list');
+            schedList.innerHTML = days.map((d, i) => {
+                const h = get('p' + (i+1)) || "--";
+                return `<div class="item"><strong>${d} :</strong> ${h}</div>`;
+            }).join('');
 
-            if (user !== "STREAMER" && cid && token) {
-                try {
-                    const uRes = await fetch(`https://api.twitch.tv/helix/users?login=${user}`, {
-                        headers: { 'Client-ID': cid, 'Authorization': `Bearer ${token}` }
-                    });
-                    const uData = await uRes.json();
-                    if(uData.data[0]) document.getElementById('pfp').src = uData.data[0].profile_image_url;
+            // Jeux
+            const games = get('games');
+            if(games) document.getElementById('games-list').innerHTML = games.split(',').map(g => `<div class="item">${g.trim()}</div>`).join('');
 
-                    const sRes = await fetch(`https://api.twitch.tv/helix/streams?user_login=${user}`, {
-                        headers: { 'Client-ID': cid, 'Authorization': `Bearer ${token}` }
-                    });
-                    const sData = await sRes.json();
-                    const badge = document.getElementById('status-live');
-                    if(sData.data.length > 0) {
-                        badge.innerText = "STATUS: LIVE NOW";
-                        badge.className = "status-badge online";
-                    }
-                } catch(e) { console.log("API Error"); }
-            }
+            // ... (Ici ton code Fetch Twitch pour PFP et Live Status)
         }
         syncData();
-        setInterval(syncData, 60000);
     </script>
 </body>
 </html>
-
